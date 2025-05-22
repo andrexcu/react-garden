@@ -1,8 +1,7 @@
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
-import Tictactoe from "./challenges/tictactoe/Tictactoe";
 import Tenzies from "./challenges/tenzies/Tenzies";
-import Hangman from "./challenges/hangman/Hangman";
+import Tictactoe from "./challenges/tictactoe/Tictactoe";
 
 function App() {
   return (
@@ -18,7 +17,7 @@ function App() {
         />
         <Route path="/challenges/tictactoe" element={<Tictactoe />} />
         <Route path="/challenges/tenzies" element={<Tenzies />} />
-        <Route path="/challenges/hangman" element={<Hangman />} />
+        {/* <Route path="/challenges/hangman" element={<Hangman />} /> */}
       </Routes>
     </main>
   );
