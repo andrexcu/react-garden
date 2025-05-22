@@ -1,6 +1,7 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Tictactoe from "./challenges/tictactoe/Tictactoe";
+import Tenzies from "./challenges/tenzies/Tenzies";
 
 function App() {
   return (
@@ -9,13 +10,13 @@ function App() {
         <Route
           path="/"
           element={
-            <h1 className="text-3xl font-bold underline text-cyan-700 text-center">
+            <h1 className="text-3xl font-bold underline text-cyan-700 text-center ">
               WELCOME TO MY REACT GARDEN 🌱
             </h1>
           }
         />
-
         <Route path="/challenges/tictactoe" element={<Tictactoe />} />
+        <Route path="/challenges/tenzies" element={<Tenzies />} />
       </Routes>
     </main>
   );
