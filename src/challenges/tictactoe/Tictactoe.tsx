@@ -1,26 +1,19 @@
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import winningCombos from "./WinningCombos";
+import Advanced from "./Advanced";
 
 type Move = {
   index: number;
   move: "X" | "O";
 };
 
-const winningCombos = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8], // rows
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8], // cols
-  [0, 4, 8],
-  [2, 4, 6], // diagonals
-];
-
 const Tictactoe = () => {
   const [xo, setXo] = useState<Move[]>([]);
   const [currentMove, setCurrentMove] = useState<"X" | "O">("X");
   const [winner, setWinner] = useState<"X" | "O" | null>(null);
   const [winningIndices, setWinningIndices] = useState<number[] | null>(null);
+  const [isAIMoving, setIsAIMoving] = useState(false);
 
   const putXo = (i: number) => {
     if (xo.some((move) => move.index === i) || winner) return;
@@ -44,10 +37,48 @@ const Tictactoe = () => {
   }, [xo]);
 
   const draw = xo.length === 9 && !winner;
+  const newGame = () => {
+    setXo([]);
+    setCurrentMove("X");
+    setWinner(null);
+    setWinningIndices(null);
+  };
+
+  //   useEffect(() => {
+  //     const currentPlayer = currentMove;
+  //     const isXTurn = currentPlayer === "X";
+
+  //     if (!isXTurn && !winner && xo.length < 9) {
+  //       const timeout = setTimeout(() => {
+  //         const takenIndices = xo.map((m) => m.index);
+  //         const available = Array.from({ length: 9 }, (_, i) => i).filter(
+  //           (i) => !takenIndices.includes(i)
+  //         );
+
+  //         if (available.length === 0) return;
+
+  //         const randomIndex =
+  //           available[Math.floor(Math.random() * available.length)];
+  //         setXo((prev) => [...prev, { index: randomIndex, move: "O" }]);
+  //         setCurrentMove("X");
+  //       }, 500);
+
+  //       return () => clearTimeout(timeout);
+  //     }
+  //   }, [xo, currentMove, winner]);
+
   return (
-    <div>
+    <div className=" flex flex-col items-center justify-center">
+      <Advanced
+        xo={xo}
+        currentMove={currentMove}
+        winner={winner}
+        setXo={setXo}
+        setCurrentMove={setCurrentMove}
+        setIsAIMoving={setIsAIMoving}
+      />
       <div className="transition ease-in-out duration-300 h-8 mb-8 text-xl font-bold text-center">
-        {!draw ? winner ? `${winner} wins!` : "": "Draw!"}
+        {!draw ? (winner ? `${winner} wins!` : "") : "Draw!"}
       </div>
       <div className="grid grid-cols-3 w-[350px] h-[350px]">
         {Array.from({ length: 9 }, (_, i) => {
@@ -64,19 +95,23 @@ const Tictactoe = () => {
           const cell = xo.find((move) => move.index === i);
           return (
             <div
-              onClick={() => putXo(i)}
+              onClick={() => !isAIMoving && putXo(i)}
               key={i}
               className={`
               ${removeBorder}
-              ${winningIndices?.includes(i) ? "bg-green-400" : ""}
-              ${winner !== null && !winningIndices?.includes(i) && "opacity-45"}
               transition ease-in-out duration-300
               flex items-center justify-center
-              border-2 p-8 text-5xl cursor-pointer
+              border-2 border-gray-800 p-8 text-5xl cursor-pointer
              `}
             >
               {(cell && (
-                <span className="transition ease-in-out duration-300">
+                <span
+                  className={`transition ease-in-out duration-300 ${
+                    winner !== null && !winningIndices?.includes(i)
+                      ? "opacity-35"
+                      : "opacity-100"
+                  }`}
+                >
                   {cell.move}
                 </span>
               )) || <span className="opacity-0 ">X</span>}
@@ -84,7 +119,9 @@ const Tictactoe = () => {
           );
         })}
       </div>
-      {/* <button></button> */}
+      <Button className="mt-16 max-w-1/3" variant={"outline"} onClick={newGame}>
+        NEW GAME
+      </Button>
     </div>
   );
 };
