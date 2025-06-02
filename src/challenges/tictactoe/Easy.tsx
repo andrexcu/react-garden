@@ -1,12 +1,11 @@
 import { useEffect } from "react";
-import minimax from "./MinimaxAlgo";
 
 type Move = {
   index: number;
   move: "X" | "O";
 };
 
-interface AdvancedProps {
+interface EasyProps {
   index?: number;
   move?: "X" | "O";
   xo: Move[];
@@ -18,40 +17,39 @@ interface AdvancedProps {
   setIsAIMoving: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Advanced = ({
+const Easy = ({
+  currentMove,
+  winner,
   xo,
   setXo,
   setCurrentMove,
-  currentMove,
-  winner,
   setIsAIMoving,
-}: AdvancedProps) => {
+}: EasyProps) => {
   useEffect(() => {
-    const isXTurn = currentMove === "X";
+    const currentPlayer = currentMove;
+    const isXTurn = currentPlayer === "X";
 
     if (!isXTurn && !winner && xo.length < 9) {
       setIsAIMoving(true);
       const timeout = setTimeout(() => {
+        const takenIndices = xo.map((m) => m.index);
+        const available = Array.from({ length: 9 }, (_, i) => i).filter(
+          (i) => !takenIndices.includes(i)
+        );
 
-        const board: Array<"X" | "O" | null> = Array(9).fill(null);
-        xo.forEach(({ index, move }) => {
-          board[index] = move;
-        });
+        if (available.length === 0) return;
 
-        const { index: bestMove } = minimax(board, 0, true);
-
-        if (bestMove !== null) {
-          setXo((prev) => [...prev, { index: bestMove, move: "O" }]);
-          setCurrentMove("X");
-        }
+        const randomIndex =
+          available[Math.floor(Math.random() * available.length)];
+        setXo((prev) => [...prev, { index: randomIndex, move: "O" }]);
+        setCurrentMove("X");
         setIsAIMoving(false);
       }, 500);
 
       return () => clearTimeout(timeout);
     }
   }, [xo, currentMove, winner]);
-
   return null;
 };
 
-export default Advanced;
+export default Easy;
