@@ -15,6 +15,7 @@ const Tictactoe = () => {
   const [winner, setWinner] = useState<"X" | "O" | null>(null);
   const [winningIndices, setWinningIndices] = useState<number[] | null>(null);
   const [isAIMoving, setIsAIMoving] = useState(false);
+  const [mode, setMode] = useState<"easy" | "advanced">("easy");
 
   const putXo = (i: number) => {
     if (xo.some((move) => move.index === i) || winner) return;
@@ -43,35 +44,62 @@ const Tictactoe = () => {
     setCurrentMove("X");
     setWinner(null);
     setWinningIndices(null);
+    setIsAIMoving(false);
+  };
+
+  useEffect(() => {
+    newGame();
+  }, [mode]);
+
+  const changeMode = () => {
+    setMode((prev) => (prev === "easy" ? "advanced" : "easy"));
   };
 
   return (
     <section className="flex flex-row justify-center items-center gap-8">
-      {/* <div className="flex flex-col">
-        <span>EASY</span>
-        <span>ADVANCED</span>
-      </div> */}
       <div className=" flex flex-col items-center justify-center">
         <div className="flex items-center justify-center gap-8 mb-12">
-          <span>EASY</span>
-          <span>ADVANCED</span>
+          <span
+            className={
+              mode === "easy"
+                ? "text-green-500 cursor-default"
+                : "cursor-pointer"
+            }
+            onClick={changeMode}
+          >
+            EASY
+          </span>
+          <span
+            className={
+              mode === "advanced"
+                ? "text-green-500 cursor-default"
+                : "cursor-pointer"
+            }
+            onClick={changeMode}
+          >
+            ADVANCED
+          </span>
         </div>
-        <Advanced
-          xo={xo}
-          currentMove={currentMove}
-          winner={winner}
-          setXo={setXo}
-          setCurrentMove={setCurrentMove}
-          setIsAIMoving={setIsAIMoving}
-        />
-        {/* <Easy
-        currentMove={currentMove}
-        winner={winner}
-        xo={xo}
-        setXo={setXo}
-        setCurrentMove={setCurrentMove}
-        setIsAIMoving={setIsAIMoving}
-      /> */}
+
+        {mode === "easy" ? (
+          <Easy
+            currentMove={currentMove}
+            winner={winner}
+            xo={xo}
+            setXo={setXo}
+            setCurrentMove={setCurrentMove}
+            setIsAIMoving={setIsAIMoving}
+          />
+        ) : (
+          <Advanced
+            xo={xo}
+            currentMove={currentMove}
+            winner={winner}
+            setXo={setXo}
+            setCurrentMove={setCurrentMove}
+            setIsAIMoving={setIsAIMoving}
+          />
+        )}
         {/* <div className="transition ease-in-out duration-300 h-8 mb-8 text-xl font-bold text-center">
         {!draw ? (winner ? `${winner} wins!` : "") : "Draw!"}
       </div> */}
