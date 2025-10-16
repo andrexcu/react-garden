@@ -100,9 +100,9 @@ const Tictactoe = () => {
             setIsAIMoving={setIsAIMoving}
           />
         )}
-        {/* <div className="transition ease-in-out duration-300 h-8 mb-8 text-xl font-bold text-center">
+        <div className="transition ease-in-out duration-300 h-8 mb-8 text-xl font-bold text-center">
         {!draw ? (winner ? `${winner} wins!` : "") : "Draw!"}
-      </div> */}
+      </div>
         <div className="grid grid-cols-3 w-[350px] h-[350px]">
           {Array.from({ length: 9 }, (_, i) => {
             const row = Math.floor(i / 3);
